@@ -12,13 +12,13 @@ const $container = $('.container');
 
 // SET FUNCTIONS
 const setTokens = ({ nextPageToken, prevPageToken } = {}) => { 
-    state.nextPageToken = nextPageToken,
-    state.prevPageToken = prevPageToken 
+    state.nextPageToken = nextPageToken;
+    state.prevPageToken = prevPageToken;
 };
 const setSearchWord = () => state.searchWord = $('#searchField').val();
 const setApiData = apiData => state.apiData = apiData;
-const setPage = page => state.currentPage = page;
 const setVideo = video => state.currentVideo = video;
+// const setPage = page => state.currentPage = page;
 
 // API FUNCTION
 const getDataFromAPI = ({ q, channelId, pageToken } = {}) => {
@@ -26,7 +26,7 @@ const getDataFromAPI = ({ q, channelId, pageToken } = {}) => {
         url: 'https://www.googleapis.com/youtube/v3/search',
         data: { 
           part: 'snippet',
-          key: '#',
+          key: 'AIzaSyDeA5cvCmUpYL1cuskV3OsKDtVQZC9qFLM',
           maxResults: 24,
           type: 'video',
           q,
@@ -72,7 +72,6 @@ const createGrid = (data, cols) => {
                 </a>
               </div>`;
 
-        // if multiple of 4
         if ((i+1) % cols === 0) {
           rows+= `<div class="row">${columns}</div> \n`;
           columns='';
@@ -113,7 +112,7 @@ const setUpNavBtns = () => {
 const getToken = (el) => $(el).attr('rel') === 'js-prev' ? state.prevPageToken : state.nextPageToken;
 
 const setArgs = (pageToken) => {
-    return state.currentPage === 'main' ? { q: state.searchWord, pageToken } : { channelId: state.currentVideo.channelId, pageToken };
+    return true ? { q: state.searchWord, pageToken } : { channelId: state.currentVideo.channelId, pageToken };
 }
 
 // EVENT LISTENERS
@@ -150,10 +149,18 @@ const removeOverlay = () => $body.on('click', '.close', () => {
 });
 
 $(
-setPage('main'),
 setUpNavBtns(),
 searchBtnClick(),
 videoClick(),
 navTo(),
 removeOverlay()
 );
+
+// data.reduce(function(prev, curr, idx, arr) {
+//     if ((idx+1) % cols === 0) {
+//         return prev + '<div class="row">' + arr.slice((idx+1)-4, idx+1) + '</div>';
+//     } else if ((idx+1) === arr.length && arr.length % cols !== 0){
+//         return prev + '<div class="row">' + arr.slice(arr.length - (idx+1) % cols) + '</div>';
+//     }
+//     return prev + '';
+// }, '');
