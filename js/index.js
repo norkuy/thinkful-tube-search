@@ -158,7 +158,7 @@ removeOverlay()
 
 // data.reduce(function(prev, curr, idx, arr) {
 //     if ((idx+1) % cols === 0) {
-//         return prev + '<div class="row">' + arr.slice((idx+1)-4, idx+1) + '</div>';
+//         return prev + '<div class="row">' + arr.slice((idx+1)-cols, idx+1) + '</div>';
 //     } else if ((idx+1) === arr.length && arr.length % cols !== 0){
 //         return prev + '<div class="row">' + arr.slice(arr.length - (idx+1) % cols) + '</div>';
 //     }
