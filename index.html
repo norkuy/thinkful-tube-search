@@ -11,14 +11,23 @@
       <h1 class="text-center">Thinkful Tube Search</h1>
     </header>
     <main role="main">
-      <form>
-        <input type="text" id="searchField" placeholder="Enter Search Term">
-        <button id="searchBtn" type="submit">SUBMIT</button>
-      </form>
+      <section role="region" class="search-area">
+        <form>
+          <input type="text" id="searchField" placeholder="Enter Search Term">
+          <button id="searchBtn" type="submit" rel="js-search-btn">SUBMIT</button>
+        </form>
+      </section>
+      <section role="region" class="results">
+              <h2 class="text-center">... out of ...</h2>
+      </section>
       <section role="region">
-        <div class="results text-center"></div>
         <div class="container"></div>
-        <div class="nav"></div>
+      </section>
+      <section role="region" class="nav-container">
+          <div class="nav" rel="js-controls">
+              <button class="nav-btn" rel="js-prev">PREV</button>
+              <button class="nav-btn" rel="js-next">NEXT</button>
+          </div>
       </section>
     </main>
     <script
