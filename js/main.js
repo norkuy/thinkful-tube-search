@@ -128,12 +128,14 @@ const videoClick = () => {
   });
 }
 
-const setCSS = (val) => $body.css('overflow', val);
-
 const removeOverlay = () => $body.on('click', '.close', () => {
     $('.overlay').remove();
     setCSS('initial');
 });
+
+// GENERAL
+
+const setCSS = (val) => $body.css('overflow', val);
 
 $(
 setUpNavBtns(),
