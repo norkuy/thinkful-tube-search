@@ -10,23 +10,13 @@ const $search = $('[rel="js-search-btn"]');
 const $body = $('body');
 const $container = $('.container');
 
-// SET FUNCTIONS
-const setTokens = ({ nextPageToken, prevPageToken } = {}) => { 
-    state.nextPageToken = nextPageToken;
-    state.prevPageToken = prevPageToken;
-};
-const setSearchWord = () => state.searchWord = $('#searchField').val();
-const setApiData = apiData => state.apiData = apiData;
-const setVideo = video => state.currentVideo = video;
-// const setPage = page => state.currentPage = page;
-
 // API FUNCTION
 const getDataFromAPI = ({ q, channelId, pageToken } = {}) => {
     const settings = {
         url: 'https://www.googleapis.com/youtube/v3/search',
         data: { 
           part: 'snippet',
-          key: '#',
+          key: 'AIzaSyB_1syo0h5hcPURALPX7_znCzLWP2MfEnc',
           maxResults: 24,
           type: 'video',
           q,
@@ -35,6 +25,7 @@ const getDataFromAPI = ({ q, channelId, pageToken } = {}) => {
         },
         dataType: 'json',
         type: 'GET',
+        beforeSend: function(xhr){xhr.setRequestHeader('Referer', 'https://repl.it')},
         success: setDataSuccess,
         error: logError
     }
@@ -43,8 +34,9 @@ const getDataFromAPI = ({ q, channelId, pageToken } = {}) => {
 
 // SUCCESS/ERROR CALLBACKS
 function setDataSuccess(data) {
-  setTokens({ nextPageToken: data.nextPageToken, prevPageToken: data.prevPageToken });
-  setApiData(data.items);
+  state.nextPageToken = data.nextPageToken;
+  state.prevPageToken = data.prevPageToken;
+  state.apiData = data.items;
   createGrid(data, 4);
   setUpNavBtns();
 };
@@ -62,7 +54,7 @@ const createGrid = (data, cols) => {
                     <div class="contain">
                         <div class="bg" style="background-image: url(${video.snippet.thumbnails.medium.url})">
                             <div class="overlayVid">
-                                <img src="img/play-button.svg" class="playBtn" alt="play button">         
+                                <img src="https://i.imgur.com/l5n1fc7.png" class="playBtn" alt="play button">         
                             </div>
                         </div>
                     </div>
@@ -91,7 +83,7 @@ const openOverlay = () => {
                                 <iframe src="${`https://www.youtube.com/embed/${state.currentVideo.id.videoId}`}"></iframe>
                             </div>
                             <section class='btn-container text-center'>
-                                <button class='btn channel'>MORE FROM THIS CHANNEL</button>
+                                <a target="_blank" href="https://www.youtube.com/channel/${location.channelId}"><button class='btn channel'>MORE FROM THIS CHANNEL</button></a>
                                 <button class="close">CLOSE</button>
                             </section>
                             <h2>DESCRIPTION</h2>
@@ -111,23 +103,18 @@ const setUpNavBtns = () => {
 // navTo FUNCTIONS
 const getToken = (el) => $(el).attr('rel') === 'js-prev' ? state.prevPageToken : state.nextPageToken;
 
-const setArgs = (pageToken) => {
-    return true ? { q: state.searchWord, pageToken } : { channelId: state.currentVideo.channelId, pageToken };
-}
-
 // EVENT LISTENERS
 const navTo = () => {
     $body.on('click', '[rel="js-controls"]', e => {
-        let currToken = getToken(e.target);
-        let args = setArgs(currToken);
-        getDataFromAPI(args);
+        let pageToken = getToken(e.target);
+        getDataFromAPI({ q: state.searchWord, pageToken });
     });
 };
   
 const searchBtnClick = () => {
     $search.on('click', e => {
         e.preventDefault();
-        setSearchWord();
+        state.searchWord = $('#searchField').val();
         getDataFromAPI({ q: state.searchWord });
     });
 };
@@ -136,7 +123,7 @@ const videoClick = () => {
   $body.on('click', '[rel="video"]', e => {
     e.preventDefault();
     let idx = $('[rel="video"]').index( $(e.currentTarget) );
-    setVideo(state.apiData[idx]);
+    state.currentVideo = state.apiData[idx];
     openOverlay();
   });
 }
@@ -156,11 +143,3 @@ navTo(),
 removeOverlay()
 );
 
-// data.reduce(function(prev, curr, idx, arr) {
-//     if ((idx+1) % cols === 0) {
-//         return prev + '<div class="row">' + arr.slice((idx+1)-cols, idx+1) + '</div>';
-//     } else if ((idx+1) === arr.length && arr.length % cols !== 0){
-//         return prev + '<div class="row">' + arr.slice(arr.length - (idx+1) % cols) + '</div>';
-//     }
-//     return prev + '';
-// }, '');
