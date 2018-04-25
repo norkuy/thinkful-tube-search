@@ -16,7 +16,7 @@ const getDataFromAPI = ({ q, channelId, pageToken } = {}) => {
         url: 'https://www.googleapis.com/youtube/v3/search',
         data: { 
           part: 'snippet',
-          key: 'AIzaSyB_1syo0h5hcPURALPX7_znCzLWP2MfEnc',
+          key: '#',
           maxResults: 24,
           type: 'video',
           q,
