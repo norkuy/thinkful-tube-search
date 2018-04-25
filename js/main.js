@@ -34,8 +34,7 @@ const getDataFromAPI = ({ q, channelId, pageToken } = {}) => {
 
 // SUCCESS/ERROR CALLBACKS
 function setDataSuccess(data) {
-  $('.results-txt').prop('hidden', false);
-  $('.results-txt').text(data.pageInfo.totalResults + ' Total Results');
+  setResults(data);
   state.nextPageToken = data.nextPageToken;
   state.prevPageToken = data.prevPageToken;
   state.apiData = data.items;
@@ -149,6 +148,11 @@ const a11yOverlay = (onOff) => {
         $('main').attr('aria-hidden', 'false');
     }
 } 
+
+const setResults = (data) => {
+    $('.results-txt').prop('hidden', false);
+    $('.results-txt').text(data.pageInfo.totalResults + ' Total Results');
+}
 
 $(
 setUpNavBtns(),
