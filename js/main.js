@@ -16,7 +16,7 @@ const getDataFromAPI = ({ q, channelId, pageToken } = {}) => {
         url: 'https://www.googleapis.com/youtube/v3/search',
         data: { 
           part: 'snippet',
-          key: '#',
+          key: 'AIzaSyB_1syo0h5hcPURALPX7_znCzLWP2MfEnc',
           maxResults: 24,
           type: 'video',
           q,
@@ -25,7 +25,7 @@ const getDataFromAPI = ({ q, channelId, pageToken } = {}) => {
         },
         dataType: 'json',
         type: 'GET',
-        beforeSend: function(xhr){xhr.setRequestHeader('Referer', 'https://repl.it')},
+        beforeSend: function(xhr){xhr.setRequestHeader('Referer', 'file://')},
         success: setDataSuccess,
         error: logError
     }
@@ -34,6 +34,8 @@ const getDataFromAPI = ({ q, channelId, pageToken } = {}) => {
 
 // SUCCESS/ERROR CALLBACKS
 function setDataSuccess(data) {
+  $('.results-txt').prop('hidden', false);
+  $('.results-txt').text(data.pageInfo.totalResults + ' Total Results');
   state.nextPageToken = data.nextPageToken;
   state.prevPageToken = data.prevPageToken;
   state.apiData = data.items;
@@ -50,7 +52,7 @@ const createGrid = (data, cols) => {
 
     data.items.forEach((video, i) => {
       columns+=`<div class="col-${cols}">
-                <a class="ytlink" href="https://www.youtube.com/embed/${video.id.videoId}" rel="video">
+                <a class="ytlink" href="https://www.youtube.com/embed/${video.id.videoId}" role="button" rel="video">
                     <div class="contain">
                         <div class="bg" style="background-image: url(${video.snippet.thumbnails.medium.url})">
                             <div class="overlayVid">
@@ -78,9 +80,9 @@ const openOverlay = () => {
     const location = state.currentVideo.snippet;
     let overlay = `<section class='overlay'>
                     <div class='outer-wrapper'>
-                            <h1 class="text-center videoTitle">${location.channelTitle}</h1>
+                            <h2 class="text-center videoTitle">${location.channelTitle}</h2>
                             <div class='wrapper'>
-                                <iframe src="${`https://www.youtube.com/embed/${state.currentVideo.id.videoId}`}"></iframe>
+                                <iframe src="${`https://www.youtube.com/embed/${state.currentVideo.id.videoId}`} role="button"></iframe>
                             </div>
                             <section class='btn-container text-center'>
                                 <a target="_blank" href="https://www.youtube.com/channel/${location.channelId}"><button class='btn channel'>MORE FROM THIS CHANNEL</button></a>
@@ -92,6 +94,8 @@ const openOverlay = () => {
                     </section>`;
     $body.append(overlay);
     setCSS('hidden');
+    $('iframe').focus();
+    a11yOverlay('on');
 }
 
 const setUpNavBtns = () => {
@@ -131,11 +135,20 @@ const videoClick = () => {
 const removeOverlay = () => $body.on('click', '.close', () => {
     $('.overlay').remove();
     setCSS('initial');
+    a11yOverlay('off');
 });
 
 // GENERAL
 
 const setCSS = (val) => $body.css('overflow', val);
+
+const a11yOverlay = (onOff) => {
+    if (onOff === 'on') {
+        $('main').attr('aria-hidden', 'true');
+    } else {
+        $('main').attr('aria-hidden', 'false');
+    }
+} 
 
 $(
 setUpNavBtns(),
